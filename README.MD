@@ -12,7 +12,7 @@
 
 ## 特性
 1. 支持winodws/linux
-2. gevent IO 最大化利用资源
+2. gevent 协程IO 最大化利用资源
 3. masscan扫描，最快能6分钟扫完全网
 
 ## 安装
@@ -20,7 +20,7 @@
 
 ## 问题&答案
 1. 如果发现masscan运行出错请编译masscan
-2. 如果第一次扫描发现了大量IP可以将IP放到target.txt进行第二次扫描并重新设置关键字
+2. 如果第一次扫描发现了大量IP可以将IP放到target.log进行第二次扫描并重新设置关键字
 
 ## Thanks
 - [https://github.com/ysrc/xunfeng](https://github.com/ysrc/xunfeng) 中提供的编译好的masscan
