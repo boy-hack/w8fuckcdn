@@ -16,8 +16,8 @@
 2. gevent 协程IO 最大化利用资源
 3. masscan扫描，最快能6分钟扫完全网
 
-## 安装
-- git clone https://github.com/boy-hack/w8fuckcdn.git
+## 安装环境
+- python 2.7
 - pip install gevent,dnspython
 
 ## 问题&答案
