@@ -224,7 +224,7 @@ def run_process(target, options, process_num, dns_servers, next_subs, scan_count
 def Interface(domain):
     start_time = time.time()
     options = AttribDict()
-    options.file = "subnames.txt"
+    options.file = "subnames_full.txt"
     options.full_scan = False
     options.i = False
     options.threads = 100
