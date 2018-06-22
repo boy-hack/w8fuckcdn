@@ -24,6 +24,9 @@
 ## 问题&答案
 1. 如果发现masscan运行出错请编译masscan
 2. 如果第一次扫描发现了大量IP可以将IP放到target.log进行第二次扫描并重新设置关键字
+3. 究竟是运行get_ips.py还是fuckcdn.py?两个脚本之间的关系?
+    - [https://github.com/boy-hack/w8fuckcdn/issues/1](https://github.com/boy-hack/w8fuckcdn/issues/1)
+
 
 ## Thanks
 - [https://github.com/ysrc/xunfeng](https://github.com/ysrc/xunfeng) 中提供的编译好的masscan
