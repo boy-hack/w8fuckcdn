@@ -3,7 +3,7 @@
 
 ## 使用
 - target.log 配置扫描的IP段
-- config.py 设置要查找的文本以及网站域名
+- config.py 设置要查找的文本、网站域名以及配置是否进行HTTPS扫描支持
 - 运行 `python fuckcdn.py` 
 
 ## 程序流程
@@ -15,6 +15,7 @@
 1. 支持winodws/linux
 2. gevent 协程IO 最大化利用资源
 3. masscan扫描，最快能6分钟扫完全网
+4. 支持HTTPS识别
 
 ## 安装环境
 - python 2.7

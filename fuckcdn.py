@@ -10,7 +10,8 @@ import sys,os,platform,gevent
 from gevent import monkey
 monkey.patch_all()
 from gevent.queue import PriorityQueue
-import socket,time
+import time
+import zlib, socket,ssl
 import config
 from lib.common import print_msg
 
@@ -20,7 +21,10 @@ def masscan(path,rate):
         path = str(path).translate(None, ';|&')
         rate = str(rate).translate(None, ';|&')
         if not os.path.exists(path):return
-        os.system("%s -p80 -iL target.log -oL tmp.log --randomize-hosts --rate=%s"%(path,rate))
+        PortScaned = 80
+        if config.HTTPS_Support:
+            PortScaned = 443
+        os.system("%s -p%s -iL target.log -oL tmp.log --randomize-hosts --rate=%s"%(path,PortScaned,rate))
         result_file = open('tmp.log', 'r')
         result_json = result_file.readlines()
         result_file.close()
@@ -43,17 +47,65 @@ def masscan(path,rate):
 
 def httpServer(arg,timeout = 5):
     host, domain ,port = arg
-    try:
-        socketObj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socketObj.settimeout(timeout)
-        socketObj.connect((host, port))
-        socketObj.send("GET / HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n" % domain)
-        read = socketObj.recv(1024)
-        if read.find("HTTP/1.") == 0 or read.lower().find("<html") > 0:
-            return read
-        socketObj.close()
-    except Exception as e:
-        return None
+
+    if port == 443:
+        sock = ssl.wrap_socket(socket.socket())
+    else:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+    sock.settimeout(config.timeout)
+    sock.connect((host, port))
+
+
+    data = "GET / HTTP/1.1\r\nHost: %s\r\nAccept-Encoding: gzip, deflate\r\nConnection: close\r\n\r\n" % (domain)
+
+    sock.send(data)
+
+    recv_data = ""
+    header = None
+    body = None
+    length = 0
+
+    headers = {}
+
+
+    html = ""
+
+    while True:
+        buf = sock.recv(1024)
+        if buf:
+            recv_data += buf
+        else:
+            break
+
+        if header is None:
+            index = recv_data.find("\r\n\r\n")
+            if index >= 0:
+                header = recv_data[0:index]
+                recv_data = recv_data[index+4:]
+                header_lines = header.split("\r\n")
+                status_line = header_lines[0]
+                # print status_line
+                for line in header_lines[1:]:
+                    # print line
+                    line = line.strip("\r\n")
+                    if len(line) == 0:
+                        continue
+                    colonIndex = line.find(":")
+                    fieldName = line[:colonIndex]
+                    fieldValue = line[colonIndex+1:].strip()
+                    headers[fieldName] = fieldValue
+                if "Content-Length" in headers:
+                    length = int(headers['Content-Length'])
+        if header is None:
+            break
+
+    if 'Content-Encoding' in headers and headers['Content-Encoding'] == 'gzip' :
+        html = zlib.decompress(recv_data, 16+zlib.MAX_WBITS)
+    else:
+        html = recv_data
+    sock.close()
+    return html
 
 class HttpTest(object):
 
@@ -77,7 +129,10 @@ class HttpTest(object):
         while not self.queue.empty():
             try:
                 item = self.queue.get(timeout=3.0)
-                host, domain, port = item, self.host , 80
+                if config.HTTPS_Support:
+                    host, domain, port = item, self.host , 443
+                else:
+                    host, domain, port = item, self.host , 80
                 html = httpServer((host, domain, port),self.timeout)
                 if html  is not None and self.keyword in html:
                     self.outfile.write(item + '\n')
