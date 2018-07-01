@@ -9,7 +9,8 @@
 ## 程序流程
 基于masscan扫描IP端中开放的80端口，程序自动连接每个IP测试，筛选出符合条件的ip保存到result.txt  
 程序提供"基于扫描子域名获取IP段"的方法来尽可能减少IP段范围  
-- usage: `python get_ips.py baidu.com`
+- usage: `python get_ips.py -d baidu.com`
+- 当然，可以自己搜索相关域名，使用`python get_ips.py -f target.txt --ips`来生成IP段
 
 ## 特性
 1. 支持winodws/linux

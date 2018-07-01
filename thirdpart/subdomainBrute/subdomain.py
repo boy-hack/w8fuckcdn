@@ -224,11 +224,11 @@ def run_process(target, options, process_num, dns_servers, next_subs, scan_count
 def Interface(domain):
     start_time = time.time()
     options = AttribDict()
-    options.file = "subnames_full.txt"
+    options.file = "subnames.txt"
     options.full_scan = False
     options.i = False
     options.threads = 100
-    options.process = 3
+    options.process = 6
     options.output = False
     # make tmp dirs
     tmp_dir = 'tmp/%s_%s' % (domain, int(time.time()))
