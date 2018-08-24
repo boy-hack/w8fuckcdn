@@ -16,7 +16,8 @@
 1. 支持winodws/linux
 2. gevent 协程IO 最大化利用资源
 3. masscan扫描，最快能6分钟扫完全网
-4. 支持HTTPS识别
+4. 支持HTTPS
+5. 支持调节masscan的rate(速率)
 
 ## 安装环境
 - python 2.7

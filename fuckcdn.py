@@ -156,7 +156,10 @@ class HttpTest(object):
 
 def main():
     system = platform.system()
-    rate = 10000
+    if not config.rate:
+        rate = 1000
+    else:
+        rate = config.rate
     masscanPath = ""
 
     if system == "Windows":
