@@ -20,7 +20,8 @@
 
 ## 安装环境
 - python 2.7
-- pip install gevent,dnspython
+- pip install gevent dnspython
+- Windows需要安装WinPcap
 
 ## 问题&答案
 1. 如果发现masscan运行出错请编译masscan
