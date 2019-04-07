@@ -57,7 +57,7 @@ def httpServer(arg,timeout = 5):
     sock.connect((host, port))
 
 
-    data = "GET / HTTP/1.1\r\nHost: %s\r\nAccept-Encoding: gzip, deflate\r\nConnection: close\r\n\r\n" % (domain)
+    data = "GET %s HTTP/1.1\r\nHost: %s\r\nAccept-Encoding: gzip, deflate\r\nConnection: close\r\n\r\n" % (config.path,domain)
 
     sock.send(data)
 
@@ -114,6 +114,8 @@ class HttpTest(object):
         self.queue = PriorityQueue()
         self.host = host
         self.keyword = keyword
+        if isinstance(self.keyword,str):
+            self.keyword = [self.keyword]
         self.result = []
         for ip in ips:
             self.queue.put(ip)
@@ -124,6 +126,13 @@ class HttpTest(object):
         self.filename = os.path.join(rootPath,"result",host + ".log")
         self.outfile = open(self.filename, 'w')
 
+    def _in_keyword(self,html):
+        ret = True
+        for i in self.keyword:
+            if html not in i:
+                ret = False
+                break
+        return ret
 
     def _scan(self,j):
         while not self.queue.empty():
@@ -134,7 +143,7 @@ class HttpTest(object):
                 else:
                     host, domain, port = item, self.host , 80
                 html = httpServer((host, domain, port),self.timeout)
-                if html  is not None and self.keyword in html:
+                if html is not None and self._in_keyword(html):
                     self.outfile.write(item + '\n')
                     self.outfile.flush()
                     self.success += 1

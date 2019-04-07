@@ -3,7 +3,9 @@
 
 host = "www.hacking8.com" # 需要查找网站的域名
 
-keyword = "<h1>Hello World" # 需要查找的关键字 结果没有解码，最好是英文
+keyword = ["<h1>Hello World"] # 需要查找的关键字 结果没有解码，最好是英文,列表形式可以多个
+
+path = "/" # WEB扫描路径，/为跟路径
 
 timeout = 15 # 连接网站时超时IP
 
