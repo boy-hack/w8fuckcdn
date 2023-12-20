@@ -127,10 +127,10 @@ class HttpTest(object):
         self.outfile = open(self.filename, 'w')
 
     def _in_keyword(self,html):
-        ret = True
+        ret = False
         for i in self.keyword:
-            if html not in i:
-                ret = False
+            if i in html:
+                ret = True
                 break
         return ret
 
